@@ -1,0 +1,23 @@
+{
+    "name": "jitesoft/jb-hub-socialite-provider",
+    "description": "Jetbrains Hub OAuth2 Provider for Laravel Socialite.",
+    "license": "MIT",
+    "authors": [{
+        "name": "Johannes Tegnér",
+        "email": "johannes@jitesoft.com"
+    }],
+    "require": {
+        "php": "^5.6 || ^7.0",
+        "socialiteproviders/manager": "~2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.5.*",
+        "mockery/mockery": "0.9.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jitesoft\\Socialite\\JetbrainsHub\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
