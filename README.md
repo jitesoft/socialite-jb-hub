@@ -1,5 +1,4 @@
-# Socialite JbHub.
-Jetbrains hub socialite provider.
+# Socialite provider: Jetbrains HUB.
 
 ### Installation
 Require socialite and add the `SocialiteServiceProvider` and `Manager\ServiceProvider` to the providers array in the `app.php` file:
