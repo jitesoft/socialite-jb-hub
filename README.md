@@ -61,7 +61,8 @@ Create some kind of login form and redirect a "log in with jb-hub" button to the
 This you can hopefully figure out yourself...
 
 ### License
-```MIT License
+```
+MIT License
   
   Copyright (c) 2017 JiteSoft
   
