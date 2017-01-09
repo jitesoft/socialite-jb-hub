@@ -12,7 +12,14 @@ use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 
 class Provider extends AbstractProvider implements ProviderInterface {
 
-    const IDENTIFIER = "JETBRAINS_HUB";
+    const IDENTIFIER    = "JETBRAINS_HUB";
+    const PROVIDER_NAME = "jetbrains-hub";
+
+    protected $stateless      = true;
+    protected $scopeSeparator = ' ';
+    protected $scopes         = [
+        "0-0-0-0-0"
+    ];
 
     private static $endpoints = [
         "auth" => "oauth2/auth",
@@ -24,10 +31,11 @@ class Provider extends AbstractProvider implements ProviderInterface {
     private static $urlPattern = "%s/api/rest/%s";
 
     /**
-     * Build url by endpoint type ($endpoint static field).
+     * Build url by endpoint type.
      *
      * @param string $endpointType
      * @return string
+     * @see self::$endpoints
      */
     protected function buildUrl($endpointType) {
         return sprintf(
@@ -38,16 +46,28 @@ class Provider extends AbstractProvider implements ProviderInterface {
     }
 
     /**
-     * Get the authentication URL for the provider.
-     *
-     * @param  string $state
-     * @return string
+     * @inheritDoc
      */
     protected function getAuthUrl($state) {
         return $this->buildAuthUrlFromBase(
             $this->buildUrl("auth"),
             $state
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAccessTokenResponse($code) {
+        $response = $this->getHttpClient()->post($this->getTokenUrl(), [
+            'headers' => [
+                'Accept' => 'application/json',
+                "Authorization" => "Basic " . base64_encode($this->clientId . ":" . $this->clientSecret)
+            ],
+            "form_params" => $this->getTokenFields($code),
+        ]);
+
+        return json_decode($response->getBody(), true);
     }
 
     /**
@@ -60,20 +80,14 @@ class Provider extends AbstractProvider implements ProviderInterface {
     }
 
     /**
-     * Get the raw user for the given access token.
-     *
-     * @param  string $token
-     * @return array
+     * @inheritDoc
      */
     protected function getUserByToken($token) {
-        $response = $this->getHttpClient()->post(
+
+        $response = $this->getHttpClient()->get(
             $this->buildUrl("user"),
             [
-                "headers" => [
-                    "Accept" => "application/json",
-                    "Content-Type" => "application/x-www-form-urlencoded",
-                    'Authorization' => 'Bearer '.$token
-                ]
+                'headers' => ['Authorization' => 'Bearer '.$token],
             ]
         );
 
@@ -81,23 +95,34 @@ class Provider extends AbstractProvider implements ProviderInterface {
     }
 
     /**
-     * Map the raw user array to a Socialite User instance.
-     *
-     * @param  array $user
-     * @return \Laravel\Socialite\Two\User
+     * @inheritDoc
      */
     protected function mapUserToObject(array $user) {
-
         return (new User())->setRaw($user)->map([
-            'id' => array_get($user, 'user_id'),
+            'id' => array_get($user, 'id'),
             'name' => array_get($user, 'name'),
-            'email' => array_get($user, 'email'),
-            'avatar' => array_get($user, 'picture'),
-            'nickname' => array_get($user, 'nickname'),
+            'email' => array_get($user, 'profile.email.email'),
+            'verified' => array_get($user, 'profile.email.verified'),
+            'avatar' => array_get($user, 'avatar.url'),
+            'roles' => array_get($user, 'projectRoles'),
+            'banned' => array_get($user, 'banned'),
+            'guest' => array_get($user, 'guest')
         ]);
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function additionalConfigKeys() {
         return ['base_url'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getTokenFields($code) {
+        return array_merge(parent::getTokenFields($code), [
+            'grant_type' => 'authorization_code', 'access_type'=>'offline'
+        ]);
     }
 }

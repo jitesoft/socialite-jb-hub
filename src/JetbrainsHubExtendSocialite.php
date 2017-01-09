@@ -6,15 +6,10 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 namespace Jitesoft\Socialite\JetbrainsHub;
 
-use Jitesoft\Socialite\JetbrainsHub\Provider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class JetbrainsHubExtendSocialite {
-
-
     public function handle(SocialiteWasCalled $socialiteWasCalled) {
-         $socialiteWasCalled->extendSocialite("jetbrains-hub", Provider::class);
+         $socialiteWasCalled->extendSocialite(Provider::PROVIDER_NAME, Provider::class);
     }
-
-
 }
