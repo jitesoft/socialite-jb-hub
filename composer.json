@@ -1,5 +1,5 @@
 {
-    "name": "jitesoft/jb-hub-socialite-provider",
+    "name": "jitesoft/socialite-hub",
     "version": "1.0.0",
     "description": "Jetbrains Hub OAuth2 Provider for Laravel Socialite.",
     "license": "MIT",
