@@ -1,6 +1,9 @@
 # Socialite provider: Jetbrains HUB.
 
-### Installation
+```bash
+require jitesoft/socialite-hub
+```
+
 Require socialite and add the `SocialiteServiceProvider` and `Manager\ServiceProvider` to the providers array in the `app.php` file:
 
 ```php
@@ -18,7 +21,6 @@ If wanted, you can add the Socialite facade to the alias class (I prefer and rec
 ]
 ```
 
-Download the source or require the package with composer or something.  
 Add the provider to the 'services' config array:
 
 ```php
@@ -56,10 +58,9 @@ $router->get('/your/callback', function() {
 });
 ```
 
-Create some kind of login form and redirect a "log in with jb-hub" button to the `your/redirect`-endpoint!... 
-This you can hopefully figure out yourself...
+Create a login form and redirect a button to the `your/redirect`-endpoint. 
 
-### License
+## License
 ```
 MIT License
   

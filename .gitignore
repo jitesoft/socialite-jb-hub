@@ -1,6 +1,2 @@
-/vendor/
-composer.phar
-composer.lock
-Thumbs.db
-coverage.clover
-jetbrains-hub.iml
+.idea
+vendor/
